@@ -26,8 +26,9 @@
 #define ZGyroH 0x47
 #define ZGyroL 0x48
 
-bool canRead = true;
-bool canDisplayData = false;
+bool canReadNewSet = true;
+bool canReadFromMPU = false;
+bool ready = false;
 
 // VARIABILI DATI GLOBALI
 float XAxisData = 0;
@@ -156,26 +157,25 @@ void printDebug(float &XAxisData, float &YAxisData, float &ZAxisData, float &XGy
 void handleInterrupt() {
   getAccelerometerData(XAxisData, YAxisData, ZAxisData); // Ottiene i dati dall'accelerometro e li mette nelle variabili globali
   getGyroscopeData(XGyroData, YGyroData, ZGyroData); // Ottiene i dati dal giroscopio e li mette nelle variabili globali
-  canDisplayData = true;
+  ready = true;
 }
 
 ISR(TIMER1_COMPA_vect){ // Interrupt che viene attivato ogni x millisecondi (x = readInterval)
-  canRead = true; // Abilitare il flag canRead per permettere al codice di leggere dal MPU6050
+  if(canReadNewSet) {
+    canReadFromMPU = true;
+    canReadNewSet = false; // Abilitare il flag canRead per permettere al codice di leggere dal MPU6050
+  }
 }
 
 void loop() {
-  if(canRead) {
+  if(canReadFromMPU) {
     handleInterrupt();
-    canRead = false;
+    canReadNewSet = true;
   }
 
-    if(canRead) {
-    handleInterrupt();
-    canRead = false;
-  }
-
-  if(canDisplayData) {
+  if(ready) {
     //printDebug(XAxisData, YAxisData, ZAxisData, XGyroData, YGyroData, ZGyroData);
+
     if(XGyroData > xHighThreshold) {
       Serial.println("PAGE UP");
     }else if(XGyroData < xLowThreshold) {
@@ -188,6 +188,6 @@ void loop() {
       Serial.println("SINISTRA");
     }
 
-    canDisplayData = false;
+    ready = false;
   }
 }
