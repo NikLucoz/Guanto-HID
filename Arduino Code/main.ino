@@ -40,7 +40,7 @@ float ZGyroData = 0;
 
 void setup() {
   Wire.begin();  // Inizializza la comunicazione I2C
-	Serial.begin(115200);
+  Serial.begin(115200);
   
 	// Invia il segnale di reset al MPU6050
   Wire.beginTransmission(MPU_ADDRESS);  // Inizia la trasmissione verso l'indirizzo del MPU6050
