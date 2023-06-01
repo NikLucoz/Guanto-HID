@@ -38,9 +38,15 @@ float XGyroData = 0;
 float YGyroData = 0;
 float ZGyroData = 0;
 
+// THRESHOLD 
+float xHighThreshold = 30;
+float xLowThreshold = -30;
+float zHighThreshold = 30;
+float zLowThreshold = -30;
+
 void setup() {
   Wire.begin();  // Inizializza la comunicazione I2C
-  Serial.begin(115200);
+	Serial.begin(115200);
   
 	// Invia il segnale di reset al MPU6050
   Wire.beginTransmission(MPU_ADDRESS);  // Inizia la trasmissione verso l'indirizzo del MPU6050
@@ -169,7 +175,7 @@ void loop() {
     canRead = false;
   }
 
-    if(canRead) {
+  if(canRead) {
     handleInterrupt();
     canRead = false;
   }
