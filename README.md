@@ -14,7 +14,7 @@ Il codice dello script in Python per eseguire le gesture è disponibile qui:
 
 Il dispositivo dovrà essere in grado di leggere i dati del giroscopio (utilizzando un interrupt per la lettura) e di inviarli tramite interfaccia seriale USB ad un computer dove uno script Python eseguirà le gesture.
 
-![Untitled](Progetto%20aba06e50264e4eca85b2195337a1ab8c/Untitled.png)
+![Untitled](README_IMG/Untitled.png)
 
 ## **Funzionamento protocollo I2C**
 
@@ -54,7 +54,7 @@ Per questo progetto verrà utilizzato il microcontrollore **Arduino Nano**.
 
 ## FASE 1 (Connessione Arduino Nano con MPU6050)
 
-![Untitled](Progetto%20aba06e50264e4eca85b2195337a1ab8c/Untitled%201.png)
+![Untitled](README_IMG/Untitled%201.png)
 
 La connessione del dispositivo **MPU6050** ad un **Arduino Nano** è molto semplice.
 
@@ -77,7 +77,7 @@ Questo registro (**0x6B)** consente all'utente di configurare la modalità di al
 
 Questo è lo schema del registro **0x6B:**
 
-![Untitled](Progetto%20aba06e50264e4eca85b2195337a1ab8c/Untitled%202.png)
+![Untitled](README_IMG/Untitled%202.png)
 
 Per inviare un segnale di reset bisogna mettere il **Bit7** ad **1**, inoltre mettendo il **Bit6** a **0** è possibile disattivare il low power mode del dispositivo.
 
@@ -137,11 +137,11 @@ Per quanto riguarda il giroscopio, il **Full Scale Range** indica la massima vel
 
 Schema registro **1B** ovvero Giroscopio:
 
-![Untitled](Progetto%20aba06e50264e4eca85b2195337a1ab8c/Untitled%203.png)
+![Untitled](README_IMG/Untitled%203.png)
 
 Schema registro **1C** ovvero Accelerometro:
 
-![Untitled](Progetto%20aba06e50264e4eca85b2195337a1ab8c/Untitled%204.png)
+![Untitled](README_IMG/Untitled%204.png)
 
 Per andare a configurare entrambi i **Range** al massimo bisogna modificare i **Bit4** e **Bit3** e impostarli secondo queste due tabelle:
 
@@ -149,9 +149,9 @@ Per andare a configurare entrambi i **Range** al massimo bisogna modificare i **
 
 **Tabella per l’Accelerometro**
 
-![Untitled](Progetto%20aba06e50264e4eca85b2195337a1ab8c/Untitled%205.png)
+![Untitled](README_IMG/Untitled%205.png)
 
-![Untitled](Progetto%20aba06e50264e4eca85b2195337a1ab8c/Untitled%206.png)
+![Untitled](README_IMG/Untitled%206.png)
 
 Quindi per impostare entrambi i **Full Scale Range** al massimo dobbiamo inviare al registro questa serie di bit **00011000** o ****0x18**** in Hex.
 
@@ -240,7 +240,7 @@ Ora è necessario impostare il **prescaler** a 1024, per far ciò andiamo a modi
 
 Schema dei bit necessari per il prescaler del registro **TCCR1B**
 
-![Untitled](Progetto%20aba06e50264e4eca85b2195337a1ab8c/Untitled%207.png)
+![Untitled](README_IMG/Untitled%207.png)
 
 Per impostarlo a 1024 basterà cambiare i bit **CS12** e **CS10** ad **1**
 
