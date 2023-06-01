@@ -26,12 +26,6 @@
 #define ZGyroH 0x47
 #define ZGyroL 0x48
 
-// GYROSCOPE POSITION THRESHOLD
-#define xLowThreshold -30
-#define xHighThreshold 30 
-#define zLowThreshold -30
-#define zHighThreshold 30
-
 bool canRead = true;
 bool canDisplayData = false;
 
@@ -66,7 +60,7 @@ void setup() {
   Wire.write(0x18);                      // Imposta il valore 0x18 (00011000 in binario)
   Wire.endTransmission(true);            // Termina la trasmissione
 
-  setupReadingInterrupt();               // Viene impostato l'interrupt globale per leggere i dati dal MPU6050
+  setupReadingInterrupt();               // Viene impostato l'interrupt globale per leggere i dati dal MPU6050 
 }
 
 void setupReadingInterrupt() {
@@ -133,9 +127,6 @@ void getGyroscopeData(float &XGyroData, float &YGyroData, float &ZGyroData) { //
 }
 
 void printDebug(float &XAxisData, float &YAxisData, float &ZAxisData, float &XGyroData, float &YGyroData, float &ZGyroData) {
-  Serial.println();
-  Serial.println();
-  Serial.println();
   Serial.print("XAxisAccelerometer = ");
   Serial.print(XAxisData, DEC);
   Serial.print(" ");
@@ -154,6 +145,12 @@ void printDebug(float &XAxisData, float &YAxisData, float &ZAxisData, float &XGy
   Serial.print(" ");
   Serial.print("ZGyroAccelerometer = ");
   Serial.print(ZGyroData, DEC);
+  Serial.println();
+  Serial.println();
+  Serial.println();
+  Serial.println();
+  Serial.println();
+  Serial.println();
 }
 
 void handleInterrupt() {
@@ -173,19 +170,7 @@ void loop() {
   }
 
   if(canDisplayData) {
-    //printDebug(XAxisData, YAxisData, ZAxisData, XGyroData, YGyroData, ZGyroData);
-    if(XGyroData > xHighThreshold) {
-      Serial.println("PAGE UP");
-    }else if(XGyroData < xLowThreshold) {
-      Serial.println("PAGE DOWN");
-    }
-
-    if(ZGyroData < zLowThreshold) {
-      Serial.println("DESTRA");      
-    }else if (ZGyroData > zHighThreshold) {
-      Serial.println("SINISTRA");
-    }
-
+    printDebug(XAxisData, YAxisData, ZAxisData, XGyroData, YGyroData, ZGyroData);
     canDisplayData = false;
   }
 }
