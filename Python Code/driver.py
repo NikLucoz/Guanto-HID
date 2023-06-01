@@ -1,6 +1,5 @@
 import serial
 import keyboard
-import serial
 
 # Imposta la porta seriale e il baud rate
 porta_seriale = 'COM3'  # Sostituisci con la tua porta seriale corretta
