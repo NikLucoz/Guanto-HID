@@ -169,8 +169,25 @@ void loop() {
     canRead = false;
   }
 
+    if(canRead) {
+    handleInterrupt();
+    canRead = false;
+  }
+
   if(canDisplayData) {
-    printDebug(XAxisData, YAxisData, ZAxisData, XGyroData, YGyroData, ZGyroData);
+    //printDebug(XAxisData, YAxisData, ZAxisData, XGyroData, YGyroData, ZGyroData);
+    if(XGyroData > xHighThreshold) {
+      Serial.println("PAGE UP");
+    }else if(XGyroData < xLowThreshold) {
+      Serial.println("PAGE DOWN");
+    }
+
+    if(ZGyroData < zLowThreshold) {
+      Serial.println("DESTRA");      
+    }else if (ZGyroData > zHighThreshold) {
+      Serial.println("SINISTRA");
+    }
+
     canDisplayData = false;
   }
 }
