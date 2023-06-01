@@ -87,6 +87,13 @@ void setupReadingInterrupt() {
   sei(); // Abilita gli interrupt globali
 }
 
+ISR(TIMER1_COMPA_vect){ // Interrupt che viene attivato ogni x millisecondi (x = readInterval)
+  if(canReadNewSet) {
+    canReadFromMPU = true;
+    canReadNewSet = false; // Abilitare il flag canRead per permettere al codice di leggere dal MPU6050
+  }
+}
+
 int16_t getDataFromRegister(char registerAddressHigh, char registerAddressLow) {
   // Il protocollo I2C permette la trasmissione di chuck di dati da 8bit mentre i valori del componente MCU6050 sono a 16 bit, il componente divide i valori in 2 registri da 8bit
   // Per ottenere i valori compelti dobbiamo unire i dati dei due registri
@@ -166,22 +173,7 @@ void handleInterrupt() {
   ready = true;
 }
 
-ISR(TIMER1_COMPA_vect){ // Interrupt che viene attivato ogni x millisecondi (x = readInterval)
-  if(canReadNewSet) {
-    canReadFromMPU = true;
-    canReadNewSet = false; // Abilitare il flag canRead per permettere al codice di leggere dal MPU6050
-  }
-}
-
-void loop() {
-  if(canReadFromMPU) {
-    handleInterrupt();
-    canReadNewSet = true;
-  }
-
-  if(ready) {
-    //printDebug(XAxisData, YAxisData, ZAxisData, XGyroData, YGyroData, ZGyroData);
-
+void sendDataToDevice() {
     if(XGyroData > xHighThreshold) {
       Serial.println("PAGE UP");
     }else if(XGyroData < xLowThreshold) {
@@ -193,7 +185,17 @@ void loop() {
     }else if (ZGyroData > zHighThreshold) {
       Serial.println("SINISTRA");
     }
+}
 
+void loop() {
+  if(canReadFromMPU) {
+    handleInterrupt();
+    canReadNewSet = true;
+  }
+
+  if(ready) {
+    //printDebug(XAxisData, YAxisData, ZAxisData, XGyroData, YGyroData, ZGyroData);
+    sendDataToDevice();
     ready = false;
   }
 }
