@@ -175,11 +175,6 @@ void loop() {
     canRead = false;
   }
 
-  if(canRead) {
-    handleInterrupt();
-    canRead = false;
-  }
-
   if(canDisplayData) {
     //printDebug(XAxisData, YAxisData, ZAxisData, XGyroData, YGyroData, ZGyroData);
     if(XGyroData > xHighThreshold) {
