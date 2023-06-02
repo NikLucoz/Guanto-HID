@@ -120,7 +120,8 @@ int16_t getDataFromRegister(char registerAddressHigh, char registerAddressLow) {
   return registerFull;
 }
 
-void getAccelerometerData(float &XAxisData, float &YAxisData, float &ZAxisData) { // Vegnono passati come parametri gli indirizzi di memoria delle varibili globali così da inseririre lì i valori
+void getAccelerometerData(float &XAxisData, float &YAxisData, float &ZAxisData) { 
+  // Vegnono passati come parametri gli indirizzi di memoria delle varibili globali così da inseririre lì i valori
   // I valori vanno divisi per 2048 perchè ho impostato la sensibilità massima del dispositivo
   XAxisData = getDataFromRegister(XAccelH, XAccelL);
   XAxisData = (float) XAxisData / LBS_SENSITIVITY_ACCEL; 
@@ -130,8 +131,9 @@ void getAccelerometerData(float &XAxisData, float &YAxisData, float &ZAxisData) 
   ZAxisData = (float) ZAxisData / LBS_SENSITIVITY_ACCEL;
 }
 
-void getGyroscopeData(float &XGyroData, float &YGyroData, float &ZGyroData) { // Vegnono passati come parametri gli indirizzi di memoria delle varibili globali così da inseririre lì i valori
-  // I valori vanno divisi per 2048 perchè ho impostato la sensibilità massima del dispositivo
+void getGyroscopeData(float &XGyroData, float &YGyroData, float &ZGyroData) { 
+  // Vegnono passati come parametri gli indirizzi di memoria delle varibili globali così da inseririre lì i valori
+  // I valori vanno divisi per 16.4 perchè ho impostato la sensibilità massima del dispositivo
   XGyroData = getDataFromRegister(XGyroH, XGyroL);
   XGyroData = (float) XGyroData / LBS_SENSITIVITY_GYRO; 
   YGyroData = getDataFromRegister(YGyroH, YGyroL);
