@@ -114,7 +114,7 @@ int16_t getDataFromRegister(char registerAddressHigh, char registerAddressLow) {
   Wire.requestFrom(MPU_ADDRESS, 1, true); // Richiede dal MPU6050 un registro e chiude la connessione
   registerL = Wire.read();
 
-  // Compone una variabile a 16 bit contenente il valore dell'accelerometro X
+// Compongo una variabile a 16 bit contenente il valore dei registri HIGH e LOW
   int16_t registerFull = registerH << 8 | registerL;
 
   return registerFull;
