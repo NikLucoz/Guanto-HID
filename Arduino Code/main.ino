@@ -90,7 +90,7 @@ void setupReadingInterrupt() {
 ISR(TIMER1_COMPA_vect){ // Interrupt che viene attivato ogni x millisecondi (x = readInterval)
   if(canReadNewSet) {
     canReadFromMPU = true;
-    canReadNewSet = false; // Abilitare il flag canRead per permettere al codice di leggere dal MPU6050
+    canReadNewSet = false;
   }
 }
 
