@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<flowgorithm fileversion="3.0">
+    <attributes>
+        <attribute name="name" value=""/>
+        <attribute name="authors" value="Nik"/>
+        <attribute name="about" value=""/>
+        <attribute name="saved" value="2023-06-01 10:05:11 "/>
+        <attribute name="created" value="TmlrO0ZJU1NPOzIwMjMtMDYtMDE7IjA4OjA5OjQyICI7MTg3MA=="/>
+        <attribute name="edited" value="TmlrO0ZJU1NPOzIwMjMtMDYtMDE7IjA4OjA5OjQ1ICI7MTtOaWs7RklTU087MjAyMy0wNi0wMTsiMDc6MjQ6MzUgIjszOTA4"/>
+        <attribute name="edited" value="TmlrO0ZJU1NPOzIwMjMtMDYtMDE7IjA4OjUyOjI5ICI7MjtOaWs7RklTU087MjAyMy0wNi0wMTsiMDc6MjQ6MzUgIjtEZXZpY2VQcmltYUl0ZXJhemlvbmUuZnByZzs2NTky"/>
+        <attribute name="edited" value="TmlrO0ZJU1NPOzIwMjMtMDYtMDE7IjEwOjA1OjExICI7NzsxOTY5"/>
+    </attributes>
+    <function name="Main" type="None" variable="">
+        <parameters/>
+        <body>
+            <comment text="Utente accende e connette il dispositivo al computer"/>
+            <comment text="L'utente avvia il driver in Python sul PC"/>
+            <assign variable="ready" expression="false"/>
+            <assign variable="canReadFromMPU" expression="false"/>
+            <assign variable="canReadNewSet" expression="True"/>
+            <call expression="connectToMPU"/>
+            <call expression="ResetMPU"/>
+            <call expression="configureGyroscope"/>
+            <call expression="configureAccelerometer"/>
+            <call expression="configureInterrupt"/>
+            <while expression="True">
+                <if expression="INTERRUPT">
+                    <then>
+                        <comment text="L'interrupt verr&#224; chiamato ogni tot millisecondi per permettere al dispositivo di leggere nuovi dati in modo cadenzato"/>
+                        <if expression="canReadNewSet">
+                            <then>
+                                <comment text="Se il dispositivo &#232; impegnato a leggere i valori non verr&#224; di nuovo chiamata la funzione di lettura e si aspetter&#224; di riceverre un nuovo segnale per leggere un nuovo set di dati"/>
+                                <assign variable="canReadFromMPU" expression="True"/>
+                                <assign variable="canReadNewSet" expression="False"/>
+                            </then>
+                            <else/>
+                        </if>
+                    </then>
+                    <else/>
+                </if>
+                <if expression="canReadFromMPU">
+                    <then>
+                        <call expression="handleInterrupt"/>
+                        <comment text="I dati vengono letti e messi in delle variabili globali e viene abilitato il flag ready per permettere al dispositivo di inviare il segnale al PC connesso"/>
+                        <comment text="Dopo aver finito di leggere viene permesso al dispositivo di leggere un nuovo set di dati"/>
+                        <assign variable="canReadNewSet" expression="True"/>
+                    </then>
+                    <else/>
+                </if>
+                <if expression="ready">
+                    <then>
+                        <call expression="sendSignalToDevice"/>
+                        <comment text="Il dispositivo manda i segnali al PC connesso che verranno interpretati dal driver Python"/>
+                        <assign variable="ready" expression="False"/>
+                    </then>
+                    <else/>
+                </if>
+            </while>
+            <comment text="Il dispositivo si spegne o viene scollegato"/>
+        </body>
+    </function>
+    <function name="handleInterrupt" type="None" variable="">
+        <parameters/>
+        <body>
+            <comment text="La funzione legge i valori dai registri del MPU6050 e li mette in delle variabili globali,&#13;&#10;successivamente mette il segnale di ready come true"/>
+            <input variable="giroscopio"/>
+            <input variable="accelerometro"/>
+            <assign variable="ready" expression="True"/>
+        </body>
+    </function>
+    <function name="sendSignalToDevice" type="None" variable="">
+        <parameters/>
+        <body>
+            <comment text="Se i dati appena raccolti mostrno dei valori superiori ai livelli di threshold preimpostati verranno mandati dei sengali tramite seriale per attivare le gesture"/>
+            <if expression="XGyroData &gt; xHighThreshold">
+                <then>
+                    <comment text="Se la mano si alza e supera il threshold viene mandato il segnale di &quot;PageUp&quot;, ovvero di scorrere la pagina verso l'alto"/>
+                    <call expression="SendPageUpSignal"/>
+                </then>
+                <else>
+                    <if expression="XGyroData &lt; xLowThreshold">
+                        <then>
+                            <comment text="Se la mano si abbassa e supera il threshold (negativo) viene mandato il segnale di &quot;PageDown&quot;, ovvero di scorrere la pagina verso il basso."/>
+                            <call expression="SendPageDownSignal"/>
+                        </then>
+                        <else/>
+                    </if>
+                </else>
+            </if>
+            <if expression="ZGyroData &lt; zHighThreshold">
+                <then>
+                    <comment text="Se la mano si gira verso destra e supera il threshold viene mandato il segnale di &quot;Right&quot;, ovvero di effettuare una gesture custom associata al moviemnto a destra"/>
+                    <call expression="SendRightSignal"/>
+                </then>
+                <else>
+                    <if expression="ZGyroData &gt; zLowThreshold">
+                        <then>
+                            <comment text="Se la mano si gira verso sinistra e supera il threshold viene mandato il segnale di &quot;Left&quot;, ovvero di effettuare una gesture custom associata al moviemnto a sinistra"/>
+                            <call expression="SendLeftSignal"/>
+                        </then>
+                        <else/>
+                    </if>
+                </else>
+            </if>
+        </body>
+    </function>
+</flowgorithm>

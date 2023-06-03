@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<flowgorithm fileversion="3.0">
+    <attributes>
+        <attribute name="name" value=""/>
+        <attribute name="authors" value="Nik"/>
+        <attribute name="about" value=""/>
+        <attribute name="saved" value="2023-06-01 08:16:12 "/>
+        <attribute name="created" value="TmlrO0ZJU1NPOzIwMjMtMDYtMDE7IjA3OjI0OjM1ICI7MTg2OA=="/>
+        <attribute name="edited" value="TmlrO0ZJU1NPOzIwMjMtMDYtMDE7IjA4OjE2OjEyICI7NDsxOTc2"/>
+    </attributes>
+    <function name="Main" type="None" variable="">
+        <parameters/>
+        <body>
+            <comment text="Utente accende e connette il dispositivo al computer"/>
+            <comment text="L'utente avvia il driver in Python sul PC"/>
+            <assign variable="canRead" expression="True"/>
+            <assign variable="ready" expression="False"/>
+            <call expression="connectToMPU"/>
+            <call expression="ResetMPU"/>
+            <call expression="configureGyroscope"/>
+            <call expression="configureAccelerometer"/>
+            <call expression="configureInterrupt"/>
+            <while expression="True">
+                <if expression="Interrupt">
+                    <then>
+                        <comment text="L'interrupt verr&#224; chiamato ogni tot millisecondi per permettere al dispositivo di leggere nuovi dati in modo cadenzato"/>
+                        <assign variable="canRead" expression="True"/>
+                    </then>
+                    <else/>
+                </if>
+                <if expression="canRead">
+                    <then>
+                        <call expression="handleInterrupt"/>
+                        <comment text="I dati vengono letti e messi in delle variabili globali e viene abilitato il flag ready per permettere al dispositivo di inviare il segnale al PC connesso"/>
+                        <assign variable="canRead" expression="True"/>
+                    </then>
+                    <else/>
+                </if>
+                <if expression="ready">
+                    <then>
+                        <call expression="sendSignalToDevice"/>
+                        <comment text="Il dispositivo manda i segnali al PC connesso che verranno interpretati dal driver Python"/>
+                        <assign variable="ready" expression="False"/>
+                    </then>
+                    <else/>
+                </if>
+            </while>
+            <comment text="Il dispositivo si spegne"/>
+        </body>
+    </function>
+    <function name="handeInterrupt" type="None" variable="">
+        <parameters/>
+        <body>
+            <comment text="La funzione legge i valori dai registri del MPU6050 e li mette in delle variabili globali,&#13;&#10;successivamente mette il segnale di ready come true"/>
+            <input variable="giroscopio"/>
+            <input variable="accelerometro"/>
+            <assign variable="ready" expression="True"/>
+        </body>
+    </function>
+</flowgorithm>
