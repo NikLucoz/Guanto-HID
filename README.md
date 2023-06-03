@@ -8,8 +8,6 @@ La simulazione del dispositivo si trovano su Wokwi a questo indirizzo:
 
 [Progetto Trojani (Arduino Nano) - Wokwi ESP32, STM32, Arduino Simulator](https://wokwi.com/projects/365074812174370817)
 
-Il codice dello script in Python per eseguire le gesture è disponibile qui:
-
 # Analisi del problema:
 
 Il dispositivo dovrà essere in grado di leggere i dati del giroscopio (utilizzando un interrupt per la lettura) e di inviarli tramite interfaccia seriale USB ad un computer dove uno script Python eseguirà le gesture.
