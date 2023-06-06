@@ -142,33 +142,6 @@ void getGyroscopeData(float &XGyroData, float &YGyroData, float &ZGyroData) {
   ZGyroData = (float) ZGyroData / LBS_SENSITIVITY_GYRO;
 }
 
-void printDebug(float &XAxisData, float &YAxisData, float &ZAxisData, float &XGyroData, float &YGyroData, float &ZGyroData) {
-  Serial.print("XAxisAccelerometer = ");
-  Serial.print(XAxisData, DEC);
-  Serial.print(" ");
-  Serial.print("YAxisAccelerometer = ");
-  Serial.print(YAxisData, DEC);
-  Serial.print(" ");
-  Serial.print("ZAxisAccelerometer = ");
-  Serial.print(ZAxisData, DEC);
-  Serial.println();
-
-  Serial.print("XGyroAccelerometer = ");
-  Serial.print(XGyroData, DEC);
-  Serial.print(" ");
-  Serial.print("YGyroAccelerometer = ");
-  Serial.print(YGyroData, DEC);
-  Serial.print(" ");
-  Serial.print("ZGyroAccelerometer = ");
-  Serial.print(ZGyroData, DEC);
-  Serial.println();
-  Serial.println();
-  Serial.println();
-  Serial.println();
-  Serial.println();
-  Serial.println();
-}
-
 void handleInterrupt() {
   getAccelerometerData(XAxisData, YAxisData, ZAxisData); // Ottiene i dati dall'accelerometro e li mette nelle variabili globali
   getGyroscopeData(XGyroData, YGyroData, ZGyroData); // Ottiene i dati dal giroscopio e li mette nelle variabili globali
