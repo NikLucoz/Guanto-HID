@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<flowgorithm fileversion="3.0">
+    <attributes>
+        <attribute name="name" value=""/>
+        <attribute name="authors" value="Nik"/>
+        <attribute name="about" value=""/>
+        <attribute name="saved" value="2023-06-04 11:10:57 "/>
+        <attribute name="created" value="TmlrO0ZJU1NPOzIwMjMtMDYtMDQ7IjExOjA2OjA2ICI7MTg2NA=="/>
+        <attribute name="edited" value="TmlrO0ZJU1NPOzIwMjMtMDYtMDQ7IjExOjEwOjU3ICI7MTsxOTcz"/>
+    </attributes>
+    <function name="Main" type="None" variable="">
+        <parameters/>
+        <body>
+            <declare name="lineaDati" type="String" array="False" size=""/>
+            <declare name="connessioneAttiva" type="Boolean" array="False" size=""/>
+            <call expression="SetupConnessione"/>
+            <while expression="connessioneAttiva">
+                <input variable="lineaDati"/>
+                <if expression="lineaDati == &quot;PAGEUP&quot;">
+                    <then>
+                        <call expression="gestureKeyUp"/>
+                    </then>
+                    <else/>
+                </if>
+                <if expression="lineaDati == &quot;PAGEDOWN&quot;">
+                    <then>
+                        <call expression="gestureKeyDown"/>
+                    </then>
+                    <else/>
+                </if>
+                <if expression="lineaDati == &quot;STOP&quot;">
+                    <then>
+                        <call expression="chiudiConnessione"/>
+                        <assign variable="connessioneAttiva" expression="False"/>
+                    </then>
+                    <else/>
+                </if>
+            </while>
+        </body>
+    </function>
+</flowgorithm>
