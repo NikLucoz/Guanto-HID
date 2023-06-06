@@ -169,7 +169,6 @@ void loop() {
   }
 
   if(ready) {
-    //printDebug(XAxisData, YAxisData, ZAxisData, XGyroData, YGyroData, ZGyroData);
     sendDataToDevice();
     ready = false;
   }
