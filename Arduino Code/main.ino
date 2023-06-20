@@ -26,10 +26,6 @@
 #define ZGyroH 0x47
 #define ZGyroL 0x48
 
-bool canReadNewSet = true;
-bool canReadFromMPU = false;
-bool ready = false;
-
 // VARIABILI DATI GLOBALI
 float XAxisData = 0;
 float YAxisData = 0;
@@ -67,7 +63,13 @@ void setup() {
   Wire.write(0x18);                      // Imposta il valore 0x18 (00011000 in binario)
   Wire.endTransmission(true);            // Termina la trasmissione
 
-  setupReadingInterrupt();               // Viene impostato l'interrupt globale per leggere i dati dal MPU6050 
+  setupReadingInterrupt();               // Viene impostato l'interrupt globale per leggere i dati dal MPU6050
+  
+
+  // GPIOR0 flags 
+  GPIOR0 |= (1 << 0); // Primo bit a 1 ovvero canReadNewSet = true 
+  GPIOR0 |= (0 << 1); // Secondo bit a 0 ovvero canReadFromMPU = false 
+  GPIOR0 |= (0 << 2); // Terzo bit a 0 ovvero ready = false 
 }
 
 void setupReadingInterrupt() {
@@ -88,9 +90,10 @@ void setupReadingInterrupt() {
 }
 
 ISR(TIMER1_COMPA_vect){ // Interrupt che viene attivato ogni x millisecondi (x = readInterval)
-  if(canReadNewSet) {
-    canReadFromMPU = true;
-    canReadNewSet = false;
+  volatile bool canReadNewSet = (GPIOR0 & (1 << 0)) != 0;
+  if(canReadNewSet == true) {
+    GPIOR0 |= (1 << 1); //canReadFromMPU = true
+    GPIOR0 |= (0 << 0); //canReadNewSet = false
   }
 }
 
@@ -145,7 +148,7 @@ void getGyroscopeData(float &XGyroData, float &YGyroData, float &ZGyroData) {
 void handleInterrupt() {
   getAccelerometerData(XAxisData, YAxisData, ZAxisData); // Ottiene i dati dall'accelerometro e li mette nelle variabili globali
   getGyroscopeData(XGyroData, YGyroData, ZGyroData); // Ottiene i dati dal giroscopio e li mette nelle variabili globali
-  ready = true;
+  GPIOR0 |= (1 << 2); //ready = true;
 }
 
 void sendDataToDevice() {
@@ -163,13 +166,16 @@ void sendDataToDevice() {
 }
 
 void loop() {
-  if(canReadFromMPU) {
+  volatile bool canReadFromMPU = (GPIOR0 & (1 << 1)) != 0;
+  volatile bool ready = (GPIOR0 & (1 << 2)) != 0;
+
+  if(canReadFromMPU == true) {
     handleInterrupt();
-    canReadNewSet = true;
+    GPIOR0 |= (1 << 0); //canReadNewSet = true;
   }
 
-  if(ready) {
+  if(ready == true) {
     sendDataToDevice();
-    ready = false;
+    GPIOR0 |= (0 << 2); //ready = false;
   }
 }
